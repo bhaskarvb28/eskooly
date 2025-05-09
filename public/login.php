@@ -32,9 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 3. Search for user in institution DB
-    $stmt = $institutionDb->prepare("SELECT * FROM users WHERE email = ? AND role_id = (SELECT id FROM roles WHERE name = ?)");
-    $stmt->execute([$email, $role]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($role == "root") {
+        $stmt = $institutionDb->prepare("SELECT * FROM root_user WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $stmt = $institutionDb->prepare("SELECT * FROM users WHERE email = ? AND role_id = (SELECT id FROM roles WHERE name = ?)");
+        $stmt->execute([$email, $role]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     if (!$user || !password_verify($password, $user['password'])) {
         die("Invalid email, password, or role.");
@@ -52,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['role'] = $role;
 
     // 5. Redirect to dashboard (adjust path as needed)
-    if ($role == 'super admin') {
+    if ($role == 'root') {
         header("Location: ../views/admin/pages/dashboard.php");
         exit();
     }
@@ -60,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 } else {
     // Fetch institutions for the dropdown
-    $stmt = $central->query("SELECT id, institution_name FROM institutions");
+    $stmt = $central->query("SELECT id, name FROM institutions");
     $institutions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
@@ -71,41 +77,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="../public/assets/css/login.css" />
 </head>
 
 <body>
-    <h2>Login</h2>
-    <form action="" method="POST">
+    <div class="login-container" id="user">
+        <h2>Login</h2>
+        <form action="" method="POST">
+            <label for="institution_id">Institution</label>
+            <select name="institution_id" id="institution_id" required>
+                <?php foreach ($institutions as $institution): ?>
+                    <option value="<?= $institution['id'] ?>">
+                        <?= htmlspecialchars($institution['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-        <!-- Institution Dropdown -->
-        <label for="institution_id">Institution:</label>
-        <select name="institution_id" id="institution_id" required>
-            <?php foreach ($institutions as $institution): ?>
-                <option value="<?= $institution['id'] ?>">
-                    <?= htmlspecialchars($institution['institution_name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select><br />
+            <label for="roles">Role</label>
+            <select name="roles" id="roles" required>
+                <option>Admin</option>
+                <option>Teacher</option>
+                <option>Student</option>
+                <option>Parent</option>
+                <option>Accountant</option>
+                <option>Receptionist</option>
+            </select>
 
-        <!-- Role Dropdown -->
-        <label for="roles">Role: </label>
-        <select name="roles" id="roles" required>
-            <option>Super Admin</option>
-            <option>Admin</option>
-            <option>Teacher</option>
-            <option>Student</option>
-            <option>Parent</option>
-            <option>Accountant</option>
-            <option>Receptionist</option>
-        </select><br />
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="Email" autocomplete="email" required>
 
-        <!-- Email and Password fields -->
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" placeholder="Password" required>
 
-        <button type="submit">Login</button>
-        <a href="../public/signup.php">Sign up</a>
-    </form>
+            <button type="submit">Login</button>
+
+            <div class="links">
+                <p>Root User? <a href="#" onclick="toggleLoginType('root')">Login</a></p>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-container" id="root" style="display: none;">
+        <h2>Root Login</h2>
+        <form action="" method="POST">
+            <label for="root_institution_id">Institution</label>
+            <select name="institution_id" id="root_institution_id" required>
+                <?php foreach ($institutions as $institution): ?>
+                    <option value="<?= $institution['id'] ?>">
+                        <?= htmlspecialchars($institution['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <label for="rootRole" style="display: none">Role</label>
+            <select name="roles" id="rootRole" required style="display: none">
+                <option>Root</option>
+            </select>
+
+            <label for="rootEmail">Email</label>
+            <input id="rootEmail" type="email" name="email" placeholder="Email" autocomplete="email" required>
+
+            <label for="rootPassword">Password</label>
+            <input id="rootPassword" type="password" name="password" placeholder="Password" required>
+
+            <button type="submit">Login</button>
+
+            <div class="links">
+                <p>Not a Root User? <a href="#" onclick="toggleLoginType('user')">Login</a></p>
+                <p>Don't have an account?<a href="../public/signup.php">Sign up</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleLoginType(loginType) {
+            if (loginType === 'root') {
+                document.getElementById('user').style.display = 'none';
+                document.getElementById('root').style.display = 'block';
+            } else {
+                document.getElementById('user').style.display = 'block';
+                document.getElementById('root').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 
 </html>

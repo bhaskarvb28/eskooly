@@ -11,8 +11,6 @@ function createInstitutionDatabase($dbName, $adminName, $adminEmail, $adminPassw
 
     // Create the database
 
-    // add current time in the database name
-
     $pdo->exec("CREATE DATABASE `$dbName`");
 
     // Connect to the new institution database
@@ -30,8 +28,8 @@ function createInstitutionDatabase($dbName, $adminName, $adminEmail, $adminPassw
 
     // Insert the super admin
     $insertAdmin = $institutionPDO->prepare("
-        INSERT INTO users (name, email, password, role_id)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO root_user (name, email, password)
+        VALUES (?, ?, ?)
     ");
-    $insertAdmin->execute([$adminName, $adminEmail, $adminPassword, $adminRoleId]);
+    $insertAdmin->execute([$adminName, $adminEmail, $adminPassword]);
 }

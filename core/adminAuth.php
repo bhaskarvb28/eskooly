@@ -20,7 +20,7 @@ if (!isset($_SESSION['institution'])) {
 
 
 
-if (!isset($_SESSION['user']) || ($_SESSION['user']['role_id'] !== 1 && $_SESSION['user']['role_id'] !== 2)) {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 1 && $_SESSION['user']['role'] !== "root")) {
     die("Unauthorized access.");
 }
 
