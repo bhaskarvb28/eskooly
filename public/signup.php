@@ -34,12 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Email already used.");
         }
 
+        // Create uploads folder
+        $baseUploadsPath = __DIR__ . '/uploads'; // Change this to your desired base path
+        $uploadFolderPath = $baseUploadsPath . '/' . $dbName;
+
+        if (!is_dir($uploadFolderPath)) {
+            if (!mkdir($uploadFolderPath, 0755, true)) {
+                throw new Exception("Failed to create uploads folder.");
+            }
+        }
+
         // Insert institution
         $stmt = $central->prepare("
             INSERT INTO institutions (
                 name, database_name, email, phone_number, website_url,
-                address, city, state, postal_code, country
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                uploads_folder_path, address, city, state, postal_code, country
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
@@ -48,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email,
             $phone,
             $website,
+            $uploadFolderPath,
             $address,
             $city,
             $state,

@@ -18,6 +18,9 @@
 --     postal_code VARCHAR(20),
 --     country VARCHAR(100) DEFAULT 'India',
 
+--     uploads_folder_path VARCHAR(255) NOT NULL,
+
+
 --     -- Branding and Limits
 --     logo_url TEXT,
 
