@@ -3,7 +3,7 @@ require_once '../../../core/adminAuth.php';
 require_once '../../../controllers/AdminController.php';
 
 $controller = new AdminController($_SESSION['institution']['database_name']);
-$dashboardData = $controller->getDashboardData();
+$profile = $controller->getProfile();
 
 $pageTitle = "Dashboard";
 ob_start(); // Start output buffering
@@ -13,7 +13,15 @@ ob_start(); // Start output buffering
 <div class="dashboard-container">
         <h2>Admin Dashboard</h2>
         <div class="stats">
-                <p><strong>Total Users:</strong> <?= htmlspecialchars($dashboardData['total_users']) ?></p>
+                <p><strong>name:</strong> <?= htmlspecialchars($profile['name']) ?></p>
+                <p><strong>role:</strong> <?= htmlspecialchars($profile['role']) ?></p>
+                <p><strong>email:</strong> <?= htmlspecialchars($profile['email']) ?></p>
+
+                <?php
+                echo '<pre>';
+                print_r($_SESSION);
+                echo '</pre>';
+                ?>
                 <!-- Add more dashboard metrics here -->
         </div>
 </div>

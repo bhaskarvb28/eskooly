@@ -12,22 +12,23 @@ class AdminController
     }
 
     // Get dashboard data
-    public function getDashboardData()
-    {
-        // Example: count users, teachers, students
-        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
-        $users = $stmt->fetch(PDO::FETCH_ASSOC);
+    // public function getDashboardData()
+    // {
+    //     // Example: count users, teachers, students
+    //     $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
+    //     $users = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return [
-            'total_users' => $users['total_users']
-        ];
-    }
+    //     return [
+    //         'total_users' => $users['total_users']
+    //     ];
+    // }
 
     // Example: get current admin profile
-    public function getProfile($adminId)
+    public function getProfile(/*$adminId*/)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->execute([$adminId]);
+        // $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt = $this->db->prepare("SELECT * FROM root_user");
+        $stmt->execute(/*[$adminId]*/);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

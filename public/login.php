@@ -53,9 +53,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     // 4. Login success - store session
-    $_SESSION['user'] = $user;
-    $_SESSION['institution'] = $institution;
-    $_SESSION['role'] = $role;
+    // Assuming $user is an associative array or object
+    $_SESSION['user'] = [
+        'email' => $user['email'],  // If $user is an array
+        'name' => $user['name'],    // If $user is an array
+        'role' => $user['role'],    // If $user is an array
+    ];
+
+    $_SESSION['institution'] = [
+        'id' => $institution['id'],
+        'name' => $institution['name'],
+        'database_name' => $institution['database_name'],
+        'email' => $institution['email'],
+        'phone_number' => $institution['phone_number'],
+        'website_url' => $institution['website_url'],
+        'uploads_folder_path' => $institution['uploads_folder_path'],
+        'logo_url' => $institution['logo_url'] ?? '', // Default to empty if not set
+    ];
 
     // 5. Redirect to dashboard (adjust path as needed)
     if ($role == 'root') {

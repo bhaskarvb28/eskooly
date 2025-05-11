@@ -45,9 +45,7 @@ INSERT INTO roles (name) VALUES
 ('teacher'),
 ('student'),
 ('parent'),
-('accountant'),
-('receptionist'),
-('driver');
+('accountant');
 
 CREATE TABLE root_user (
     -- id INT PRIMARY KEY DEFAULT 1 CHECK (super_admin_id = 1),
@@ -68,18 +66,102 @@ CREATE TABLE root_user (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- users table
-CREATE TABLE users (
+CREATE TABLE staff (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	
+	role_id INT,
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	designation VARCHAR(50),
+	
+	father_name VARCHAR(50),
+	mother_name VARCHAR(50),
+	
+	email VARCHAR(100) UNIQUE,
+	gender ENUM('Male', 'Female', 'Other') DEFAULT 'Other',
+	
+	date_of_birth DATE,
+	date_of_joining DATE,
+	
+	mobile VARCHAR(15),
+	emergency_mobile VARCHAR(15),
+	
+	staff_photo VARCHAR(255),
+	driving_license VARCHAR(15),
+	
+	current_address TEXT,
+	permanent_address TEXT,
+	
+	qualifications VARCHAR(100),
+	experience INT,
+	
+	epf_number VARCHAR(50),
+	basic_salary DECIMAL(10, 2),
+	
+	bank_account_name VARCHAR(100),
+	bank_account_number VARCHAR(50),
+	bank_name VARCHAR(100),
+	branch_name VARCHAR(100),
+	
+	facbook_url VARCHAR(255),
+	twitter_url VARCHAR(255),
+	linkedin_url VARCHAR(255),
+	instagram_url VARCHAR(255),
+	
+	resume VARCHAR(255),
+	joining_letter VARCHAR(255),
+	other_documents VARCHAR(255),
+
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL
+);
+
+CREATE TABLE subjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
-
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100),
-    email VARCHAR(100) UNIQUE NOT NULL,
-    phone_number VARCHAR(20),
-
-
-    password VARCHAR(255) NOT NULL,
-    role_id INT NOT NULL,
+    
+    subject_code VARCHAR(20) NOT NULL UNIQUE,  -- e.g., "MATH101"
+    subject_name VARCHAR(100) NOT NULL,        -- e.g., "Mathematics"
+    academic_year VARCHAR(20),
+    subject_type ENUM('Theory', 'Practical', 'Lab', 'Project') DEFAULT 'Theory',
+    
+    description TEXT DEFAULT NULL,
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES roles(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    staff_id INT NOT NULL, -- Reference to the main staff table
+    department VARCHAR(100),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (staff_id) REFERENCES staff(id) ON DELETE CASCADE
+);
+
+CREATE TABLE classes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    class_name VARCHAR(50) NOT NULL,      -- e.g., "10th Grade"
+    section VARCHAR(10),                  -- e.g., "A", "B"
+    
+    academic_year VARCHAR(20),        -- Foreign key to academic_years
+    
+    class_teacher_id INT DEFAULT NULL,    -- Optional class in-charge
+    
+    FOREIGN KEY (class_teacher_id) REFERENCES teachers(id) ON DELETE SET NULL
+);
+
+CREATE TABLE teacher_class (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teacher_id INT NOT NULL,
+    class_id INT NOT NULL,
+    subject_id INT DEFAULT NULL,
+    academic_year VARCHAR(20),
+
+    FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE,
+    FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL
 );
