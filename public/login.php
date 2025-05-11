@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
-        $stmt = $institutionDb->prepare("SELECT * FROM users WHERE email = ? AND role_id = (SELECT id FROM roles WHERE name = ?)");
+        $stmt = $institutionDb->prepare("SELECT * FROM staff WHERE email = ? AND role_id = (SELECT id FROM roles WHERE name = ?)");
         $stmt->execute([$email, $role]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -54,11 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 4. Login success - store session
     // Assuming $user is an associative array or object
-    $_SESSION['user'] = [
-        'email' => $user['email'],  // If $user is an array
-        'name' => $user['name'],    // If $user is an array
-        'role' => $user['role'],    // If $user is an array
-    ];
+
 
     $_SESSION['institution'] = [
         'id' => $institution['id'],
@@ -73,10 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 5. Redirect to dashboard (adjust path as needed)
     if ($role == 'root') {
-        header("Location: ../views/admin/pages/dashboard.php");
+        $_SESSION['user'] = [
+            'email' => $user['email'],  // If $user is an array
+            'name' => $user['name'],    // If $user is an array
+            'role' => $user['role'],    // If $user is an array
+        ];
+        header("Location: ../views/admin/adminDashboard.php");
         exit();
+        // print_r($_SESSION);
     }
-    header("Location: ../views/{$role}/pages/dashboard.php");
+    $_SESSION['user'] = $user;
+    header("Location: ../views/{$role}/{$role}Dashboard.php");
     exit();
 } else {
     // Fetch institutions for the dropdown

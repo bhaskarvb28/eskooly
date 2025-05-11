@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn1 = document.getElementById("toggle-btn-1");
   const toggleBtn2 = document.getElementById("toggle-btn-2");
   const topbar = document.querySelector(".topbar");
+  const width = window.innerWidth;
 
   document.querySelectorAll('[data-toggle="collapse"]').forEach((toggle) => {
     toggle.addEventListener("click", function (e) {
@@ -20,47 +21,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadPage(page) {
     try {
-      const response = await fetch(`/eskooly/views/admin/pages/${page}`);
+      const response = await fetch(`/eskooly/views/teacher/pages/${page}`);
       if (!response.ok) throw new Error("Network response was not ok");
 
       const content = await response.text();
       mainContent.innerHTML = content;
 
-      //     const jsPath = `/eskooly/${page.replace(".php", ".js")}`;
+      const jsPath = `/eskooly/views/teacher/pages/${page.replace(
+        ".php",
+        ".js"
+      )}`;
 
-      //     // Remove existing script if it already exists
-      //     const existingScript = document.querySelector(`script[src="${jsPath}"]`);
-      //     if (existingScript) {
-      //       existingScript.remove();
-      //     }
+      // Remove existing script if it already exists
+      const existingScript = document.querySelector(`script[src="${jsPath}"]`);
+      if (existingScript) {
+        existingScript.remove();
+      }
 
-      //     // Load new script
-      //     requestAnimationFrame(() => {
-      //       const script = document.createElement("script");
-      //       script.src = jsPath;
-      //       script.onload = () => console.log(`Loaded ${jsPath}`);
-      //       script.onerror = () => console.warn(`No JS found at ${jsPath}`);
-      //       document.body.appendChild(script);
-      //     });
+      // Load new script
+      requestAnimationFrame(() => {
+        const script = document.createElement("script");
+        script.src = jsPath;
+        script.onload = () => console.log(`Loaded ${jsPath}`);
+        script.onerror = () => console.warn(`No JS found at ${jsPath}`);
+        document.body.appendChild(script);
+      });
 
-      // if (window.innerWidth <= 768) {
-      //       closeSidebar();
-      //     }
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
     } catch (error) {
       mainContent.innerHTML = `<h2>Error</h2><p>Could not load the page "${page}".</p>`;
     }
   }
 
-  //   function adjustIframeWidth() {
-  //     const iframe = document.querySelector("iframe");
+  function adjustIframeWidth() {
+    const iframe = document.querySelector("iframe");
 
-  //     if (sidebar.classList.contains("collapsed") || width <= 768) {
-  //       mainContent.style.width = "100%";
-  //     } else {
-  //       const sidebarWidth = sidebar.offsetWidth;
-  //       mainContent.style.width = `calc(100% - ${sidebarWidth}px)`;
-  //     }
-  //   }
+    if (sidebar.classList.contains("collapsed") || width <= 768) {
+      mainContent.style.width = "100%";
+    } else {
+      const sidebarWidth = sidebar.offsetWidth;
+      mainContent.style.width = `calc(100% - ${sidebarWidth}px)`;
+    }
+  }
 
   function closeSidebar() {
     sidebar.classList.remove("show");
@@ -76,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebar.classList.add("collapsed");
       overlay.classList.remove("active");
     }
+    adjustIframeWidth();
   });
 
   // Open sidebar on small screens
@@ -147,5 +152,5 @@ document.addEventListener("DOMContentLoaded", () => {
   //   }
   // }
 
-  loadPage("dashboard.php");
+  loadPage("syllabus/syllabus.php");
 });

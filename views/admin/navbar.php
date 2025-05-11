@@ -12,7 +12,7 @@
     </div>
 
     <nav class="navbar">
-        <a href="#" class="active" data-page="" title="Home">
+        <a href="#" class="active" data-page="dashboard.php" title="Home">
             <span class="icon">&#8962;</span>
             <span class="text">Home</span>
         </a>
@@ -23,7 +23,7 @@
             </a>
             <ul class="collapse list-unstyled" id="subMenuStaffStudents">
                 <li>
-                    <a href="#" data-page="admin/staffAndStudents/teacher.html" title="teachers"><span class="text">Staff list</span></a>
+                    <a href="#" data-page="humanResources/staffList/staffList.php" title="teachers"><span class="text">Staff list</span></a>
                 </li>
                 <li>
                     <a href="#" data-page="admin/staffAndStudents/teacher.html" title="teachers"><span class="text">Staff attendance</span></a>

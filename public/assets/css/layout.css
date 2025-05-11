@@ -141,7 +141,7 @@ nav a .icon {
   flex-grow: 1;
   overflow-y: auto;
   background: linear-gradient(to right, #e0c3fc, #8ec5fc);
-  margin: 10px;
+  padding: 10px;
 }
 
 @media (max-width: 768px) {

@@ -1,11 +1,3 @@
-<?php
-
-require_once '../../../core/adminAuth.php';
-
-// Get the actual page to load
-$pageContent = $pageContent ?? 'pages/dashboard.php'; // fallback
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +5,7 @@ $pageContent = $pageContent ?? 'pages/dashboard.php'; // fallback
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Eskooly | <?= $pageTitle ?? 'Admin Panel' ?></title>
-    <link rel="stylesheet" href="../../../public/assets/css/layout.css" />
+    <link rel="stylesheet" href="../../public/assets/css/layout.css" />
     <!-- <link rel="stylesheet" href="staffAndStudents.css" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -28,13 +20,13 @@ $pageContent = $pageContent ?? 'pages/dashboard.php'; // fallback
         <div class="container">
             <!-- Main Content -->
             <div id="main-content">
-                <?= $pageContent; ?>
+
             </div>
         </div>
 
     </div>
 
-    <script src="../../../public/assets/js/navbar.js"></script>
+    <script src="../../public/assets/js/navbar.js"></script>
 </body>
 
 </html>

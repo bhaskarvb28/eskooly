@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // Ensure user is logged in
 if (!isset($_SESSION['institution'])) {
@@ -8,9 +7,11 @@ if (!isset($_SESSION['institution'])) {
 }
 
 
+
 // echo '<pre>';
 // print_r($_SESSION);
 // echo '</pre>';
+
 
 // echo "User role_id: " . $_SESSION['user']['role_id'];
 
@@ -20,7 +21,7 @@ if (!isset($_SESSION['institution'])) {
 
 
 
-if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 1 && $_SESSION['user']['role'] !== "root")) {
+if (!isset($_SESSION['user']) || !isset($_SESSION['user']['role']) || ($_SESSION['user']['role'] !== 1 && $_SESSION['user']['role'] !== "root")) {
     die("Unauthorized access.");
 }
 

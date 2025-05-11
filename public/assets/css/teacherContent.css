@@ -1,0 +1,235 @@
+.content-container {
+  background: white;
+  width: 100%;
+  min-height: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Search Container */
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-container i {
+  position: absolute;
+  left: 10px; /* Position the icon */
+  top: 32%;
+  transform: translateY(-50%); /* Center the icon vertically */
+  color: #888; /* Icon color */
+  font-size: 16px; /* Adjust icon size as needed */
+}
+
+.search-container input {
+  width: 100%;
+  padding: 8px 12px 8px 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 20px;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: black;
+  box-shadow: 0 0 5px rgba(166, 107, 255, 0.3);
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+.table-header th {
+  background-color: #a66bff;
+  color: #fff;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.table-values td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.table-values tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* For dropdowns in last row to open upwards */
+.table-values tr:last-child .dropdown-content {
+  transform: translateY(-100%);
+  bottom: auto;
+  top: 0;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background-color: #a66bff;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  border-radius: 8px;
+  transform: translateY(100%);
+  bottom: 0;
+  margin-top: 10px;
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  -o-transform: translateY(100%);
+}
+
+.dropdown-item {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-item:hover {
+  background-color: #f2f2f2;
+}
+
+p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin: 2rem 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pagination a,
+.pagination span {
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.pagination a {
+  background-color: #a66bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #8e44ad;
+}
+
+.pagination .current-page {
+  background-color: #a66bff;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination .disabled {
+  color: grey;
+  background-color: #eee;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .table-headers th,
+  .table-values td {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  .search-container input {
+    padding: 7px 12px 7px 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .table-headers th,
+  .table-values td {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .pagination a,
+  .pagination span {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+
+  .dropdown-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+
+  .dropdown-content {
+    min-width: 100px;
+  }
+
+  .dropdown-item {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
