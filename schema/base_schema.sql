@@ -106,7 +106,7 @@ CREATE TABLE staff (
 	-- bank_name VARCHAR(100),
 	-- branch_name VARCHAR(100),
 	
-	-- facbook_url VARCHAR(255),
+	-- facebook_url VARCHAR(255),
 	-- twitter_url VARCHAR(255),
 	-- linkedin_url VARCHAR(255),
 	-- instagram_url VARCHAR(255),
