@@ -81,12 +81,12 @@ CREATE TABLE staff (
 	-- mother_name VARCHAR(50),
 	
 	email VARCHAR(100) UNIQUE,
-	-- gender ENUM('Male', 'Female', 'Other') DEFAULT 'Other',
+	gender ENUM('Male', 'Female', 'Other') DEFAULT 'Other',
 	
 	-- date_of_birth DATE,
 	-- date_of_joining DATE,
 	
-	-- mobile VARCHAR(15),
+	mobile_number VARCHAR(15),
 	-- emergency_mobile VARCHAR(15),
 	
 	-- staff_photo VARCHAR(255),
@@ -132,21 +132,70 @@ CREATE TABLE contents (
     status VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
-)
+);
 
--- CREATE TABLE subjects (
---     id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE book_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO book_categories (name) VALUES
+('Action and Adventure'),
+('Alternate History'),
+('Anthology'),
+('Chick lit'),
+('Kids'),
+('Art');
+
+CREATE TABLE subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     
---     subject_code VARCHAR(20) NOT NULL UNIQUE,  -- e.g., "MATH101"
---     subject_name VARCHAR(100) NOT NULL,        -- e.g., "Mathematics"
---     academic_year VARCHAR(20),
---     subject_type ENUM('Theory', 'Practical', 'Lab', 'Project') DEFAULT 'Theory',
+    -- code VARCHAR(20) NOT NULL UNIQUE,  -- e.g., "MATH101"
+    name VARCHAR(100) NOT NULL,        -- e.g., "Mathematics"
+    -- [type] ENUM('Theory', 'Practical', 'Lab', 'Project') DEFAULT 'Theory',
     
---     description TEXT DEFAULT NULL,
+    description TEXT DEFAULT NULL,
     
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
--- );
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO subjects (name) VALUES
+('English for today'),
+('Mathematics'),
+('Agricultural Education'),
+('Information and Communication Technology'),
+('Bangla');
+
+CREATE TABLE book (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category_id INT,
+    subject_id INT,
+    book_no VARCHAR(10),
+    issuedBooks INT DEFAULT 0,
+    isbn VARCHAR(20),
+    publisher VARCHAR(100),
+    author VARCHAR(100),
+    rack_no VARCHAR(20),
+    quantity INT NOT NULL,
+    price DECIMAL(10,2),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (category_id) REFERENCES book_categories(id) ON DELETE SET NULL
+);
+
+CREATE TABLE libraryMembers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    memberType INT,               -- refers to roles.id (e.g., 2 for staff, 3 for student)
+    memberEmail VARCHAR(50),
+
+    FOREIGN KEY (memberType) REFERENCES roles(id) ON DELETE SET NULL
+);
+
+
 
 -- CREATE TABLE classes (
 --     id INT AUTO_INCREMENT PRIMARY KEY,

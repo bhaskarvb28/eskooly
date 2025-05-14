@@ -1,3 +1,37 @@
+function deleteCategory(id) {
+  if (!confirm("Are you sure you want to delete this category?")) return;
+
+  fetch(`pages/library/deleteCategory.php?id=${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message);
+      if (data.status === "success") {
+        location.reload();
+      }
+    })
+    .catch((err) => {
+      console.error("Delete failed:", err);
+      alert("Something went wrong while deleting.");
+    });
+}
+
+function cancelMembership(id) {
+  if (!confirm("Are you sure you want to cancel this membership?")) return;
+
+  fetch(`pages/library/cancelMembership.php?id=${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message);
+      if (data.status === "success") {
+        location.reload();
+      }
+    })
+    .catch((err) => {
+      console.error("Membership Cancelation Failed:", err);
+      alert("Something went wrong while canceling membership.");
+    });
+}
+
 // const mainContent = document.getElementById("main-content");
 document.addEventListener("DOMContentLoaded", () => {
   const mainContent = document.getElementById("main-content");
@@ -21,31 +55,32 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadPage(page) {
     try {
       const response = await fetch(`/eskooly/views/admin/pages/${page}`);
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Page not found");
 
       const content = await response.text();
       mainContent.innerHTML = content;
 
-      //     const jsPath = `/eskooly/${page.replace(".php", ".js")}`;
+      const jsPath = `/eskooly/views/admin/pages/${page.replace(
+        ".php",
+        ".js"
+      )}`;
 
-      //     // Remove existing script if it already exists
-      //     const existingScript = document.querySelector(`script[src="${jsPath}"]`);
-      //     if (existingScript) {
-      //       existingScript.remove();
-      //     }
+      // Try loading the JS file
+      const script = document.createElement("script");
+      script.src = jsPath;
+      script.onload = () => {
+        console.log(`Loaded ${jsPath}`);
+      };
+      script.onerror = () => {
+        // Suppress 404 error for missing JS
+        console.info(`Optional JS not found: ${jsPath}`);
+      };
+      document.body.appendChild(script);
 
-      //     // Load new script
-      //     requestAnimationFrame(() => {
-      //       const script = document.createElement("script");
-      //       script.src = jsPath;
-      //       script.onload = () => console.log(`Loaded ${jsPath}`);
-      //       script.onerror = () => console.warn(`No JS found at ${jsPath}`);
-      //       document.body.appendChild(script);
-      //     });
-
-      // if (window.innerWidth <= 768) {
-      //       closeSidebar();
-      //     }
+      // Close sidebar if on small screen
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
     } catch (error) {
       mainContent.innerHTML = `<h2>Error</h2><p>Could not load the page "${page}".</p>`;
     }

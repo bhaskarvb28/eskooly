@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 'father_name' => $_POST['father_name'],
         // 'mother_name' => $_POST['mother_name'],
         'email' => $_POST['email'],
-        // 'gender' => $_POST['gender'] ?? 'Other',
+        'gender' => $_POST['gender'] ?? 'Other',
         // 'date_of_birth' => $_POST['date_of_birth'],
         // 'date_of_joining' => $_POST['date_of_joining'],
-        // 'mobile' => $_POST['mobile'],
+        'mobile_number' => $_POST['mobile_number'],
         // 'emergency_mobile' => $_POST['emergency_mobile'],
         // 'staff_photo' => $_POST['staff_photo'], // or handle file upload
         // 'driving_license' => $_POST['driving_license'],
@@ -43,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $controller->addStaff($staffData);
     print_r($result);
 
-    // if ($result['success']) {
-    //     echo "Staff added successfully with ID: " . $result['staff_id'];
-    // } else {
-    //     echo "Error: " . $result['error'];
-    // }
+    if ($result['success']) {
+        echo "Staff added successfully with ID: " . $result['staff_id'];
+    } else {
+        echo "Error: " . $result['error'];
+    }
 }
 ?>
 
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- 
                 <label>Father's Name: <input type="text" name="father_name"></label><br><br>
-        <label>Mother's Name: <input type="text" name="mother_name"></label><br><br>
+        <label>Mother's Name: <input type="text" name="mother_name"></label><br><br> -->
 
         <label>Gender:
             <select name="gender">
@@ -101,11 +101,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
         </label><br><br>
 
-        <label>Date of Birth: <input type="date" name="date_of_birth"></label><br><br>
-        <label>Date of Joining: <input type="date" name="date_of_joining"></label><br><br>
+        <!-- <label>Date of Birth: <input type="date" name="date_of_birth"></label><br><br>
+        <label>Date of Joining: <input type="date" name="date_of_joining"></label><br><br> -->
 
-        <label>Mobile: <input type="text" name="mobile"></label><br><br>
-        <label>Emergency Mobile: <input type="text" name="emergency_mobile"></label><br><br>
+        <label>Mobile: <input type="text" name="mobile_number"></label><br><br>
+
+        <!-- <label>Emergency Mobile: <input type="text" name="emergency_mobile"></label><br><br>
 
         <label>Photo: <input type="file" name="staff_photo"></label><br><br>
         <label>Driving License: <input type="text" name="driving_license"></label><br><br>

@@ -40,6 +40,29 @@
             </ul>
         </div>
 
+        <div>
+            <a href="#subMenuLibrary" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Library
+            </a>
+            <ul class="collapse list-unstyled" id="subMenuLibrary">
+                <li>
+                    <a href="#" data-page="library/addBookForm.php" title="library"><span class="text">Add Book</span></a>
+                </li>
+                <li>
+                    <a href="#" data-page="library/bookList.php" title="library"><span class="text">Book List</span></a>
+                </li>
+                <li>
+                    <a href="#" data-page="library/bookCategories.php" title="library"><span class="text">Book Categories</span></a>
+                </li>
+                <li>
+                    <a href="#" data-page="library/libMembers.php" title="library"><span class="text">Add Member</span></a>
+                </li>
+                <li>
+                    <a href="#" data-page="" title="teachers"><span class="text">All Issued Book</span></a>
+                </li>
+            </ul>
+        </div>
+
 
     </nav>
 

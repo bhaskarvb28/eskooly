@@ -51,6 +51,17 @@ class AdminController
             //     //     // Begin transaction
             $this->db->beginTransaction();
 
+            // Check if the email already exists
+            $emailCheckStmt = $this->db->prepare("SELECT COUNT(*) FROM staff WHERE email = ?");
+            $emailCheckStmt->execute([$staffData['email']]);
+            $emailExists = $emailCheckStmt->fetchColumn();
+
+            if ($emailExists > 0) {
+                // Rollback transaction and return error if email exists
+                $this->db->rollBack();
+                return ['success' => false, 'error' => 'Email already exists.'];
+            }
+
             //     //     // Insert into staff table
             //     //     $staffSql = "INSERT INTO staff (
             //     //     role_id, first_name, last_name, designation, 
@@ -77,8 +88,8 @@ class AdminController
             $stmt = $this->db->prepare("
             INSERT INTO staff (
                 role_id, first_name, last_name, designation, department,
-                email, password
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                email, password, gender, mobile_number
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
             $stmt->execute([
@@ -88,7 +99,9 @@ class AdminController
                 $staffData['designation'],
                 $staffData['department'] ?? null,
                 $staffData['email'],
-                $defaultPassword
+                $defaultPassword,
+                $staffData['gender'],
+                $staffData['mobile_number']
             ]);
 
             //     $stmt->execute([
@@ -97,21 +110,115 @@ class AdminController
 
             $staffId = $this->db->lastInsertId();
 
-            // If role is teacher (role_id 2) and department is provided
-            if ($staffData['role_id'] == 2 && !empty($staffData['department'])) {
-                $teacherStmt = $this->db->prepare("
-                INSERT INTO teachers (staff_id, department) 
-                VALUES (?, ?)
-            ");
-                $teacherStmt->execute([
-                    $staffId,
-                    $staffData['department']
-                ]);
-            }
-
             $this->db->commit();
 
             return ['success' => true, 'staff_id' => $staffId];
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function saveCategory($name)
+    {
+        try {
+            $this->db->beginTransaction();
+            $stmt = $this->db->prepare("
+                INSERT INTO book_categories (
+                    name
+                ) VALUES (
+                    :name
+                )
+            ");
+
+            $stmt->execute(['name' => $name]);
+            $this->db->commit();
+            return ['success' => true, 'category_id' => $this->db->lastInsertId()];
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function saveBook($bookData)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $stmt = $this->db->prepare("
+            INSERT INTO book (
+                title, category_id, subject_id, book_no,
+                isbn, publisher, author, rack_no, quantity, price, description
+            ) VALUES (
+                :title, :category_id, :subject_id, :book_no,
+                :isbn, :publisher, :author, :rack_no, :quantity, :price, :description
+            )
+        ");
+
+            $stmt->execute([
+                'title' => $bookData['title'],
+                'category_id' => $bookData['category_id'],
+                'subject_id' => $bookData['subject_id'],
+                'book_no' => $bookData['book_no'],
+                'isbn' => $bookData['isbn'] ?? null,
+                'publisher' => $bookData['publisher'] ?? null,
+                'author' => $bookData['author'] ?? null,
+                'rack_no' => $bookData['rack_no'] ?? null,
+                'quantity' => $bookData['quantity'],
+                'price' => $bookData['price'] ?? null,
+                'description' => $bookData['description'] ?? null
+            ]);
+
+            $this->db->commit();
+
+            return ['success' => true, 'book_id' => $this->db->lastInsertId()];
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function getTeachers()
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM staff WHERE role_id = 2");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $this->db->commit();
+
+            return $result['total'] ?? 0;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            // Optional: log the error or handle it as needed
+            return 0;
+        }
+    }
+
+
+    public function addMember($memberData)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $stmt = $this->db->prepare("
+            INSERT INTO libraryMembers (
+                memberType, memberEmail
+            ) VALUES (
+                :type, :email
+            )
+        ");
+
+            $stmt->execute([
+                'type' => $memberData['memberType'],
+                'email' => $memberData['memberEmail']
+            ]);
+
+            $this->db->commit();
+
+            return ['success' => true, 'member_id' => $this->db->lastInsertId()];
         } catch (Exception $e) {
             $this->db->rollBack();
             return ['success' => false, 'error' => $e->getMessage()];
